@@ -14,7 +14,17 @@ class YoutubeTranscriptTools < Formula
   depends_on "python@3.11"
 
   def install
-    virtualenv_install_with_resources
+    # Create virtualenv with pip (needed for dependency resolution)
+    venv = virtualenv_create(libexec, "python3.11", system_site_packages: true, without_pip: false)
+
+    # Install package with dependencies using pip directly
+    # Note: We bypass std_pip_args to avoid --no-deps flag
+    venv_root = libexec
+    python = "python3.11"
+    system venv_root/"bin/python", "-m", "pip", "install", "--verbose", buildpath
+
+    # Link binaries to Homebrew bin directory
+    bin.install_symlink Dir[venv_root/"bin/*"]
   end
 
   test do

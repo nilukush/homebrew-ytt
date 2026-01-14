@@ -23,8 +23,9 @@ class YoutubeTranscriptTools < Formula
     python = "python3.11"
     system venv_root/"bin/python", "-m", "pip", "install", "--verbose", buildpath
 
-    # Link binaries to Homebrew bin directory
-    bin.install_symlink Dir[venv_root/"bin/*"]
+    # Link ONLY the ytt binary to Homebrew bin directory
+    # This prevents conflicts with system Python and other packages
+    bin.install_symlink venv_root/"bin/ytt"
   end
 
   test do
